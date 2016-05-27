@@ -64,6 +64,16 @@
 
               $scope.sprawdz = function(){
                 $scope.listaWybranych = [];
+
+                $scope.listaWybranych = stworzListeWybranych();
+
+                drzewoWezly = stworzDrzewo($scope.listaWybranych.length); 
+
+                console.log(drzewoWezly);
+              };
+
+              var stworzListeWybranych = function(){
+                $scope.listaWybranych = [];
                 var id = 0;
                 window._.each($scope.wybraneProdukty, function(prod, index){
                   for(var i = 0; i < prod.liczbaProduktow; i++){
@@ -74,8 +84,88 @@
                     $scope.listaWybranych.push(nowyProdukt);
                   }
                 });
-                console.log($scope.listaWybranych);
+                return $scope.listaWybranych;
               };
+
+              var stworzDrzewo = function(liczbaProduktow){
+
+                var wezly = [];
+
+                var pierwszyEtap = [{
+                  produkty: []
+                }];
+                wezly.push(pierwszyEtap);
+                var drugiEtap = [];
+                for(var i = 0; i<liczbaProduktow;i++){
+                  drugiEtap.push({
+                    produkty: [i]
+                  });
+                }
+
+                wezly.push(drugiEtap);
+
+                for(var i =1; i<liczbaProduktow; i++){
+                  var etap = [];
+                  for(var j = 0; j<wezly[i].length; j++){
+                     for (var k = 0; k<liczbaProduktow; k++){
+                      var klon = deepObjCopy(wezly[i][j]);
+                      klon.produkty.push(k);
+                      var nowy = {
+                        produkty: klon.produkty
+                      };
+                      if(!sprawdzCzyWezelJestPoprawny(nowy) && sprawdzCzyJestUnikalny(etap, nowy)){
+                        etap.push(nowy);
+                      }
+                     }
+                  }
+                  wezly.push(etap);
+                }
+                
+                return wezly;
+              };
+
+              var sprawdzCzyWezelJestPoprawny = function(wezel){
+                return (new Set(wezel.produkty)).size !== wezel.produkty.length;
+              }; 
+
+              var sprawdzCzyJestUnikalny = function(wezly, wezel){
+                var result = true;
+                window._.each(wezly, function(wez){
+                  var ile = 0;
+                  window._.each(wez.produkty, function(prod1){
+                    window._.each(wezel.produkty, function(prod2){
+                      if(prod1 == prod2){
+                        ile++;
+                      }
+                    });
+                  });
+                  if(ile == wezel.produkty.length){
+                      result = false;
+                      return result;
+                  }
+                });
+                return result;
+              }; 
+
+              function deepObjCopy (dupeObj) {
+                var retObj = new Object();
+                if (typeof(dupeObj) == 'object') {
+                  if (typeof(dupeObj.length) != 'undefined')
+                    var retObj = new Array();
+                  for (var objInd in dupeObj) { 
+                    if (typeof(dupeObj[objInd]) == 'object') {
+                      retObj[objInd] = deepObjCopy(dupeObj[objInd]);
+                    } else if (typeof(dupeObj[objInd]) == 'string') {
+                      retObj[objInd] = dupeObj[objInd];
+                    } else if (typeof(dupeObj[objInd]) == 'number') {
+                      retObj[objInd] = dupeObj[objInd];
+                    } else if (typeof(dupeObj[objInd]) == 'boolean') {
+                      ((dupeObj[objInd] == true) ? retObj[objInd] = true : retObj[objInd] = false);
+                    }
+                  }
+                }
+                return retObj;
+              }
 
             }]);
         </script>
