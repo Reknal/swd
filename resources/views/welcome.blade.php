@@ -11,13 +11,13 @@
         <script>
             var app = angular.module('app',[]);
 
-            app.controller('MainController', ['$scope', function($scope) {
+            app.controller('MainController', ['$scope', '$http', function($scope,  $http) {
               $scope.init = function(){
                 $http({
                   method: 'GET',
                   url: '/getAllProducts'
                 }).then(function successCallback(response) {
-                   console.log(response);
+                   console.log(data);
                 });
               };
             }]);
