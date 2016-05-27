@@ -62,6 +62,21 @@
                 });
               };
 
+              $scope.sprawdz = function(){
+                $scope.listaWybranych = [];
+                var id = 0;
+                window._.each($scope.wybraneProdukty, function(prod, index){
+                  for(var i = 0; i < prod.liczbaProduktow; i++){
+                    var nowyProdukt = window._.clone(prod);
+                    delete nowyProdukt.liczbaProduktow;
+                    nowyProdukt.id = id;
+                    id++;
+                    $scope.listaWybranych.push(nowyProdukt);
+                  }
+                });
+                console.log($scope.listaWybranych);
+              };
+
             }]);
         </script>
 
@@ -133,7 +148,7 @@
                           <td>{[{produkt.wartosc}]}</td>
                         </tr>
                       </table>
-                      <button type="submit" class="btn btn-default">Sprawdz</button>
+                      <button type="submit" ng-click="sprawdz()" class="btn btn-default">Sprawdz</button>
                     </form>
                 </div>
             </div>
