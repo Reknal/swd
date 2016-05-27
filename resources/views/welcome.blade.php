@@ -13,7 +13,12 @@
 
             app.controller('MainController', ['$scope', function($scope) {
               $scope.init = function(){
-                console.log('asdasd');
+                $http({
+                  method: 'GET',
+                  url: '/getAllProducts'
+                }).then(function successCallback(response) {
+                   console.log(response);
+                });
               };
             }]);
         </script>
@@ -32,26 +37,33 @@
                 font-family: 'Lato';
             }
 
-            .container {
-                text-align: center;
-                display: table-cell;
-                vertical-align: middle;
-            }
-
-            .content {
-                text-align: center;
-                display: inline-block;
-            }
-
-            .title {
-                font-size: 96px;
-            }
         </style>
     </head>
     <body ng-app="app">
         <div class="container" ng-controller="MainController" ng-init="init()">
-            <div class="content">
-                <div class="title">Laravel 5</div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <form>
+                      <div class="form-group">
+                        <label for="wielkopscPlecaka">Wybierz wielkosc plecaka</label>
+                        <input type="number" class="form-control" id="wielkopscPlecaka" placeholder="30">
+                      </div>
+                      <div class="form-group">
+                        <label for="wielkopscPlecaka">Maksymalna masa pojazdu</label>
+                        <input type="number" class="form-control" id="wielkopscPlecaka" placeholder="30">
+                      </div>
+                      <div class="form-group">
+                        <label for="wielkopscPlecaka">Maksymalna objetosć pojazdu</label>
+                        <input type="number" class="form-control" id="wielkopscPlecaka" placeholder="30">
+                      </div>
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox"> Komputer 5kg 30m^3
+                        </label>
+                      </div>
+                      <button type="submit" class="btn btn-default">Sprawdz</button>
+                    </form>
+                </div>
             </div>
         </div>
     </body>
