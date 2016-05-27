@@ -5,7 +5,7 @@
 
         <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-        
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
 
@@ -64,12 +64,15 @@
 
               $scope.sprawdz = function(){
                 $scope.listaWybranych = [];
+                var drzewoWezly = [];
+                var drzewoKrawedzie  = [];
 
                 $scope.listaWybranych = stworzListeWybranych();
 
-                drzewoWezly = stworzDrzewo($scope.listaWybranych.length); 
+                drzewoWezly = stworzWezly($scope.listaWybranych.length);
 
-                console.log(drzewoWezly);
+                drzewoKrawdzenie = stworzKrawedzie(drzewoWezly);
+
               };
 
               var stworzListeWybranych = function(){
@@ -87,7 +90,89 @@
                 return $scope.listaWybranych;
               };
 
-              var stworzDrzewo = function(liczbaProduktow){
+              var stworzKrawedzie = function(wezly){
+
+                var krawedzie = [];
+
+                var krawedzieDlaEtapu = [];
+                window._.each(wezly[1], function(w, index){
+                  krawedzieDlaEtapu.push({
+                    z: [],
+                    do: w.produkty,
+                    wartosc: dajWartosc(wezly[0][0].produkty, w.produkty)
+                  });
+                  krawedzieDlaEtapu.push({
+                    z: [],
+                    do: w.produkty,
+                    wartosc: 0
+                  });
+                });
+
+                krawedzie.push(krawedzieDlaEtapu);
+
+                for(var i = 1; i<(wezly.length-1); i++){
+
+                  var krawedzieDlaEtapu = [];
+
+                  for(var j = 0; j<wezly[i].length; j++){
+
+                    var wezlyPolaczone = window._.filter(wezly[i+1], function(wez){
+                      return sprawdzCzyWezelJestPolaczony(wezly[i][j], wez);
+                    });
+
+                    window._.each(wezlyPolaczone, function(wezlyy, index){
+                      krawedzieDlaEtapu.push({
+                        z: wezly[i][j].produkty,
+                        do: wezlyy.produkty,
+                        wartosc: dajWartosc(wezly[i][j].produkty, wezlyy.produkty)
+                      });
+                      krawedzieDlaEtapu.push({
+                        z: wezly[i][j].produkty,
+                        do: wezlyy.produkty,
+                        wartosc: 0
+                      });
+                    });
+
+                  }
+
+                  krawedzie.push(krawedzieDlaEtapu);
+
+                }
+
+                console.log('krawedzie', krawedzie);
+
+                return krawedzie;
+              };
+
+              var dajWartosc = function(z, od){
+                var z = deepObjCopy(z);
+                var od = deepObjCopy(od);
+                window._.each(z, function(id, index){
+                  od.splice(od.indexOf(id), 1);
+                });
+                return window._.filter($scope.listaWybranych, function(prod){
+                  return prod.id == od[0];
+                })[0].wartosc;
+              };
+
+              var sprawdzCzyWezelJestPolaczony = function(wez1, wez2){
+                var result = true;
+                window._.each(wez1.produkty, function(prod1, index){
+                  var sprawdzCzyIstnieje = false;
+                  window._.each(wez2.produkty, function(prod2, index){
+                    if(prod1 == prod2){
+                      sprawdzCzyIstnieje = true;
+                    }
+                  });
+                  if(!sprawdzCzyIstnieje){
+                    result = false;
+                    return result;
+                  }
+                });
+                return result;
+              };
+
+              var stworzWezly = function(liczbaProduktow){
 
                 var wezly = [];
 
@@ -120,13 +205,13 @@
                   }
                   wezly.push(etap);
                 }
-                
+
                 return wezly;
               };
 
               var sprawdzCzyWezelJestPoprawny = function(wezel){
                 return (new Set(wezel.produkty)).size !== wezel.produkty.length;
-              }; 
+              };
 
               var sprawdzCzyJestUnikalny = function(wezly, wezel){
                 var result = true;
@@ -145,14 +230,14 @@
                   }
                 });
                 return result;
-              }; 
+              };
 
               function deepObjCopy (dupeObj) {
                 var retObj = new Object();
                 if (typeof(dupeObj) == 'object') {
                   if (typeof(dupeObj.length) != 'undefined')
                     var retObj = new Array();
-                  for (var objInd in dupeObj) { 
+                  for (var objInd in dupeObj) {
                     if (typeof(dupeObj[objInd]) == 'object') {
                       retObj[objInd] = deepObjCopy(dupeObj[objInd]);
                     } else if (typeof(dupeObj[objInd]) == 'string') {
