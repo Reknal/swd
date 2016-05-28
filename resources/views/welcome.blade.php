@@ -5,6 +5,7 @@
 
         <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
@@ -79,7 +80,13 @@
 
                 drzewoWezly = stworzWezly($scope.listaWybranych.length);
 
+                // console.log('drzewoWezly', drzewoWezly);
+
                 drzewoKrawdzenie = stworzKrawedzie(drzewoWezly);
+
+                // var temp = deepObjCopy(drzewoKrawdzenie);
+
+                // console.log('krawedzie', temp);
 
                 dajProdukty(drzewoKrawdzenie);
 
@@ -105,6 +112,12 @@
 
                   } else {
 
+                    // usuwamy krawedzie, ktore nie spelniaja ogarniczen
+                    
+                     // var temp1 = deepObjCopy(u);
+
+                     // console.log('u przed wyrzuceniem', temp1);
+
                     window._.each(u, function(grupa, indeks){
                       u[indeks] = window._.filter(u[indeks], function(krawedz){
                         var masaIObjetosc = dajMaseObjetoscWartoscZPoprzednichIteracji(krawedz, zapamietaneWartosci[iterator]);
@@ -112,9 +125,15 @@
                       });
                     });
 
+                    // var temp2 = deepObjCopy(u);
+
+                    //  console.log('u po wyrzuceniu', temp2);
+
+                    // dodawanie wartosci z poprzednich iteracji 
+
                     window._.each(u, function(grupa, indeks1){
                       window._.each(grupa, function(krawedz, indeks2){
-                        var masaObjetoscWartosc = dajMaseObjetoscWartoscZPoprzednichIteracji(krawedz, zapamietaneWartosci[iterator]);
+                        var masaObjetoscWartosc = dajMaseObjetoscWartoscZPoprzednichIteracji(krawedz, zapamietaneWartosci[iterator]); 
                         u[indeks1][indeks2].wartosc = u[indeks1][indeks2].wartosc + masaObjetoscWartosc.wartosc;
                         u[indeks1][indeks2].zmianaMasy = u[indeks1][indeks2].zmianaMasy + masaObjetoscWartosc.masa;
                         u[indeks1][indeks2].zmianaObjetosci = u[indeks1][indeks2].zmianaObjetosci + masaObjetoscWartosc.objetosc;
@@ -137,9 +156,13 @@
                     vx.push(najwieksza);
                   });
 
+
+
                   zapamietaneWartosci.push(vx);
 
-                  console.log('zapamietaneWartosci', zapamietaneWartosci);
+                  var temp = deepObjCopy(zapamietaneWartosci);
+
+                  console.log('zapamietaneWartosci', temp);
 
                 }
 
@@ -168,8 +191,12 @@
                   
                 }
 
+                console.log('sciezka', sciezka);
+
                 for (var i =0; i<sciezka.length;i++){
-                  produkty.push(znajdzRoznice(sciezka[i].z, sciezka[i].do));
+                  if(sciezka[i].decyzja == 1){
+                    produkty.push(znajdzRoznice(sciezka[i].z, sciezka[i].do));
+                  }
                 }
 
                 return produkty;
@@ -263,14 +290,16 @@
                     do: w.produkty,
                     wartosc: masaWartoscObjetosc.wartosc,
                     zmianaMasy: masaWartoscObjetosc.masa,
-                    zmianaObjetosci: masaWartoscObjetosc.objetosc
+                    zmianaObjetosci: masaWartoscObjetosc.objetosc,
+                    decyzja: 1
                   });
                   krawedzieDlaEtapu.push({
                     z: [],
                     do: w.produkty,
                     wartosc: 0,
                     zmianaMasy: 0,
-                    zmianaObjetosci: 0
+                    zmianaObjetosci: 0,
+                    decyzja: 0
                   });
                 });
 
@@ -293,14 +322,16 @@
                         do: wezlyy.produkty,
                         wartosc: masaWartoscObjetosc.wartosc,
                         zmianaMasy: masaWartoscObjetosc.masa,
-                        zmianaObjetosci: masaWartoscObjetosc.objetosc
+                        zmianaObjetosci: masaWartoscObjetosc.objetosc,
+                        decyzja: 1
                       });
                       krawedzieDlaEtapu.push({
                         z: wezly[i][j].produkty,
                         do: wezlyy.produkty,
                         wartosc: 0,
                         zmianaMasy: 0,
-                        zmianaObjetosci: 0
+                        zmianaObjetosci: 0,
+                        decyzja: 0
                       });
                     });
 
@@ -309,8 +340,6 @@
                   krawedzie.push(krawedzieDlaEtapu);
 
                 }
-
-                console.log('krawedzie', krawedzie);
 
                 return krawedzie;
               };
@@ -413,6 +442,16 @@
                 return retObj;
               }
 
+              $scope.dajSume = function(produkty, para){
+                var result = 0;
+
+                window._.each(produkty, function(prod){
+                  result+=prod[para];
+                });
+
+                return result;
+              };
+
             }]);
         </script>
 
@@ -424,7 +463,11 @@
             body {
                 margin: 0;
                 padding: 0;
-                font-family: 'Lato';
+                font-family: 'Arial';
+            }
+
+            .pointer {
+              cursor: pointer;
             }
 
         </style>
@@ -453,12 +496,20 @@
                           <th>Wartosc</th>
                         </tr>
                         <tr ng-repeat="produkt in wszystkieProdukty">
-                          <td><span ng-click="dodajProdukt(produkt)" ng-show="produkt.liczbaProduktow != 0">dodaj</span></td>
+                          <td><span class="pointer" ng-click="dodajProdukt(produkt)" ng-show="produkt.liczbaProduktow != 0">dodaj</span></td>
                           <td>{[{produkt.nazwa}]}</td>
                           <td>{[{produkt.liczbaProduktow}]}</td>
                           <td>{[{produkt.objetosc}]}</td>
                           <td>{[{produkt.masa}]}</td>
                           <td>{[{produkt.wartosc}]}</td>
+                        </tr>
+                        <tr>
+                          <td></td>
+                          <td>{[{}]}</td>
+                          <td>{[{dajSume(wszystkieProdukty, 'liczbaProduktow')}]}</td>
+                          <td>{[{dajSume(wszystkieProdukty, 'objetosc')}]}</td>
+                          <td>{[{dajSume(wszystkieProdukty, 'masa')}]}</td>
+                          <td>{[{dajSume(wszystkieProdukty, 'wartosc')}]}</td>
                         </tr>
                       </table>
                       <h4>Wybrana lista</h4>
@@ -472,12 +523,20 @@
                           <th>Wartosc</th>
                         </tr>
                         <tr ng-repeat="produkt in wybraneProdukty">
-                          <td><span ng-click="usunProdukt(produkt)">usuń</span></td>
+                          <td><span class="pointer" ng-click="usunProdukt(produkt)">usuń</span></td>
                           <td>{[{produkt.nazwa}]}</td>
                           <td>{[{produkt.liczbaProduktow}]}</td>
                           <td>{[{produkt.objetosc}]}</td>
                           <td>{[{produkt.masa}]}</td>
                           <td>{[{produkt.wartosc}]}</td>
+                        </tr>
+                        <tr>
+                          <td></td>
+                          <td>{[{}]}</td>
+                          <td>{[{dajSume(wybraneProdukty, 'liczbaProduktow')}]}</td>
+                          <td>{[{dajSume(wybraneProdukty, 'objetosc')}]}</td>
+                          <td>{[{dajSume(wybraneProdukty, 'masa')}]}</td>
+                          <td>{[{dajSume(wybraneProdukty, 'wartosc')}]}</td>
                         </tr>
                       </table>
                       <h4>Produkty do wziecia</h4>
@@ -488,11 +547,17 @@
                           <th>Masa</th>
                           <th>Wartosc</th>
                         </tr>
-                        <tr ng-repeat="produkt in produktyDoWziecia">
+                        <tr ng-repeat="produkt in produktyDoWziecia track by $index">
                           <td>{[{produkt.nazwa}]}</td>
                           <td>{[{produkt.objetosc}]}</td>
                           <td>{[{produkt.masa}]}</td>
                           <td>{[{produkt.wartosc}]}</td>
+                        </tr>
+                        <tr>
+                          <td></td>
+                          <td>{[{dajSume(produktyDoWziecia, 'objetosc')}]}</td>
+                          <td>{[{dajSume(produktyDoWziecia, 'masa')}]}</td>
+                          <td>{[{dajSume(produktyDoWziecia, 'wartosc')}]}</td>
                         </tr>
                       </table>
                       <button type="submit" ng-click="sprawdz()" class="btn btn-default">Sprawdz</button>
