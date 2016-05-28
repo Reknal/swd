@@ -18,6 +18,9 @@
             app.controller('MainController', ['$scope', '$http', function($scope,  $http) {
               $scope.wszystkieProdukty = [];
               $scope.wybraneProdukty = [];
+              $scope.produktyDoWziecia = [];
+              $scope.maksMasa = 1000;
+              $scope.maksObjetosc = 1000;
 
               $scope.init = function(){
                 $http({
@@ -25,6 +28,11 @@
                   url: '/getAllProducts'
                 }).then(function successCallback(response) {
                    $scope.wszystkieProdukty = response.data;
+                   window._.each($scope.wszystkieProdukty, function(produkt, indeks){
+                    $scope.wszystkieProdukty[indeks].wartosc = parseFloat($scope.wszystkieProdukty[indeks].wartosc);
+                    $scope.wszystkieProdukty[indeks].masa = parseFloat($scope.wszystkieProdukty[indeks].masa);
+                    $scope.wszystkieProdukty[indeks].objetosc = parseFloat($scope.wszystkieProdukty[indeks].objetosc);
+                   });
                 });
               };
 
@@ -73,6 +81,143 @@
 
                 drzewoKrawdzenie = stworzKrawedzie(drzewoWezly);
 
+                dajProdukty(drzewoKrawdzenie);
+
+              };
+
+              var dajProdukty = function(krawedzie){
+                var zapamietaneWartosci = [];
+                var iterator = 0;
+
+                for(var i = (krawedzie.length-1); i>=0; i--){
+                  var u = _.groupBy(krawedzie[i], function(krawedz){
+                    return krawedz.z;
+                  });
+
+                  // usuniecie u, ktore przekraczaja maks mase i objetosc
+                  if (i == krawedzie.length-1){
+
+                    window._.each(u, function(grupa, indeks){
+                      u[indeks] = window._.filter(u[indeks], function(krawedz){
+                        return $scope.maksMasa > krawedz.zmianaMasy && $scope.maksObjetosc > krawedz.zmianaObjetosci 
+                      });
+                    });
+
+                  } else {
+
+                    window._.each(u, function(grupa, indeks){
+                      u[indeks] = window._.filter(u[indeks], function(krawedz){
+                        var masaIObjetosc = dajMaseObjetoscWartoscZPoprzednichIteracji(krawedz, zapamietaneWartosci[iterator]);
+                        return $scope.maksMasa > (krawedz.zmianaMasy+masaIObjetosc.masa) && $scope.maksObjetosc > (krawedz.zmianaObjetosci+masaIObjetosc.objetosc); 
+                      });
+                    });
+
+                    window._.each(u, function(grupa, indeks1){
+                      window._.each(grupa, function(krawedz, indeks2){
+                        var masaObjetoscWartosc = dajMaseObjetoscWartoscZPoprzednichIteracji(krawedz, zapamietaneWartosci[iterator]);
+                        u[indeks1][indeks2].wartosc = u[indeks1][indeks2].wartosc + masaObjetoscWartosc.wartosc;
+                        u[indeks1][indeks2].zmianaMasy = u[indeks1][indeks2].zmianaMasy + masaObjetoscWartosc.masa;
+                        u[indeks1][indeks2].zmianaObjetosci = u[indeks1][indeks2].zmianaObjetosci + masaObjetoscWartosc.objetosc;
+                      });
+                    });
+
+                    iterator++;
+
+                  }
+
+                  // daj najwieksza wartosc z kazdej grupy
+                  var vx = [];
+                  window._.each(u, function(grupa){
+                    var najwieksza = deepObjCopy(grupa[0]);
+                    window._.each(grupa, function(krawedz){
+                      if(najwieksza.wartosc<krawedz.wartosc){
+                        najwieksza = deepObjCopy(krawedz);
+                      }
+                    });
+                    vx.push(najwieksza);
+                  });
+
+                  zapamietaneWartosci.push(vx);
+
+                  console.log('zapamietaneWartosci', zapamietaneWartosci);
+
+                }
+
+                var przedmioty = [];
+                var iterator = 0;
+
+                $scope.produktyDoWziecia = znajdzElementSciezki(zapamietaneWartosci);
+
+                console.log($scope.produktyDoWziecia);
+
+              };
+
+              var znajdzElementSciezki = function(zapamietaneWartosci){
+                var sciezka = [];
+                var produkty = [];
+
+                sciezka.push(zapamietaneWartosci[zapamietaneWartosci.length-1][0]);
+                for(var i = 1; i<zapamietaneWartosci.length; i++){
+
+                  for(var j =0; j<zapamietaneWartosci[zapamietaneWartosci.length-i-1].length;j++){
+                    if(sprawdzCzySaToTeSameWartosci(sciezka[i-1].do, zapamietaneWartosci[zapamietaneWartosci.length-i-1][j].z)){
+                      var scie = deepObjCopy(zapamietaneWartosci[zapamietaneWartosci.length-i-1][j]);
+                      sciezka.push(scie);
+                    }
+                  }
+                  
+                }
+
+                for (var i =0; i<sciezka.length;i++){
+                  produkty.push(znajdzRoznice(sciezka[i].z, sciezka[i].do));
+                }
+
+                return produkty;
+              };
+
+              var znajdzRoznice = function(z, doo){
+                var z = deepObjCopy(z);
+                var doo = deepObjCopy(doo);
+
+                window._.each(z, function(id, index){
+                  doo.splice(doo.indexOf(id), 1);
+                });
+
+                return window._.filter($scope.listaWybranych, function(prod){
+                  return prod.id == doo[0];
+                })[0];
+
+              };
+
+              var dajMaseObjetoscWartoscZPoprzednichIteracji = function(krawedz1, zapamietane){
+                var szukanaKrawedz = null;
+                window._.each(zapamietane, function(krawedz2, indeks1){
+                    if(sprawdzCzySaToTeSameWartosci(krawedz1.do,krawedz2.z)){
+                      szukanaKrawedz = krawedz2;
+                    }
+                });
+                var masaObjetoscWartosc = {
+                  wartosc: szukanaKrawedz.wartosc,
+                  masa: szukanaKrawedz.zmianaMasy,
+                  objetosc: szukanaKrawedz.zmianaObjetosci
+                };
+                return masaObjetoscWartosc;
+              };
+
+              var sprawdzCzySaToTeSameWartosci = function(tablica1, tablica2){
+                var ile = 0;
+                window._.each(tablica1, function(war1){
+                  window._.each(tablica2, function(war2){
+                    if(war1 == war2){
+                      ile++;
+                    }
+                  });
+                });
+                if(ile == tablica1.length){
+                  return true;
+                } else {
+                  return false;
+                }
               };
 
               var stworzListeWybranych = function(){
@@ -90,21 +235,42 @@
                 return $scope.listaWybranych;
               };
 
+              var dajMaseWartoscObjetosc = function(z, od){
+                var z = deepObjCopy(z);
+                var od = deepObjCopy(od);
+                window._.each(z, function(id, index){
+                  od.splice(od.indexOf(id), 1);
+                });
+                var produkt = window._.filter($scope.listaWybranych, function(prod){
+                  return prod.id == od[0];
+                })[0];
+                return {
+                  wartosc: produkt.wartosc,
+                  masa: produkt.masa,
+                  objetosc: produkt.objetosc
+                };
+              };
+
               var stworzKrawedzie = function(wezly){
 
                 var krawedzie = [];
 
                 var krawedzieDlaEtapu = [];
                 window._.each(wezly[1], function(w, index){
+                  var masaWartoscObjetosc = dajMaseWartoscObjetosc(wezly[0][0].produkty, w.produkty);
                   krawedzieDlaEtapu.push({
                     z: [],
                     do: w.produkty,
-                    wartosc: dajWartosc(wezly[0][0].produkty, w.produkty)
+                    wartosc: masaWartoscObjetosc.wartosc,
+                    zmianaMasy: masaWartoscObjetosc.masa,
+                    zmianaObjetosci: masaWartoscObjetosc.objetosc
                   });
                   krawedzieDlaEtapu.push({
                     z: [],
                     do: w.produkty,
-                    wartosc: 0
+                    wartosc: 0,
+                    zmianaMasy: 0,
+                    zmianaObjetosci: 0
                   });
                 });
 
@@ -121,15 +287,20 @@
                     });
 
                     window._.each(wezlyPolaczone, function(wezlyy, index){
+                      var masaWartoscObjetosc = dajMaseWartoscObjetosc(wezly[i][j].produkty, wezlyy.produkty);
                       krawedzieDlaEtapu.push({
                         z: wezly[i][j].produkty,
                         do: wezlyy.produkty,
-                        wartosc: dajWartosc(wezly[i][j].produkty, wezlyy.produkty)
+                        wartosc: masaWartoscObjetosc.wartosc,
+                        zmianaMasy: masaWartoscObjetosc.masa,
+                        zmianaObjetosci: masaWartoscObjetosc.objetosc
                       });
                       krawedzieDlaEtapu.push({
                         z: wezly[i][j].produkty,
                         do: wezlyy.produkty,
-                        wartosc: 0
+                        wartosc: 0,
+                        zmianaMasy: 0,
+                        zmianaObjetosci: 0
                       });
                     });
 
@@ -144,16 +315,6 @@
                 return krawedzie;
               };
 
-              var dajWartosc = function(z, od){
-                var z = deepObjCopy(z);
-                var od = deepObjCopy(od);
-                window._.each(z, function(id, index){
-                  od.splice(od.indexOf(id), 1);
-                });
-                return window._.filter($scope.listaWybranych, function(prod){
-                  return prod.id == od[0];
-                })[0].wartosc;
-              };
 
               var sprawdzCzyWezelJestPolaczony = function(wez1, wez2){
                 var result = true;
@@ -274,16 +435,12 @@
                 <div class="col-xs-12">
                     <form>
                       <div class="form-group">
-                        <label for="wielkopscBagaznika">Wybierz wielkosc bagaznika</label>
-                        <input type="number" class="form-control" id="wielkopscBagaznika" placeholder="30">
-                      </div>
-                      <div class="form-group">
                         <label for="maskMasa">Maksymalna masa pojazdu</label>
-                        <input type="number" class="form-control" id="maskMasa" placeholder="30">
+                        <input type="number" class="form-control" id="maskMasa" placeholder="30" ng-model="maksMasa">
                       </div>
                       <div class="form-group">
                         <label for="maksObjetosc">Maksymalna objetosć pojazdu</label>
-                        <input type="number" class="form-control" id="maksObjetosc" placeholder="30">
+                        <input type="number" class="form-control" id="maksObjetosc" placeholder="30" ng-model="maksObjetosc">
                       </div>
                       <h4>Wybierz produkty</h4>
                       <table class="table">
@@ -318,6 +475,21 @@
                           <td><span ng-click="usunProdukt(produkt)">usuń</span></td>
                           <td>{[{produkt.nazwa}]}</td>
                           <td>{[{produkt.liczbaProduktow}]}</td>
+                          <td>{[{produkt.objetosc}]}</td>
+                          <td>{[{produkt.masa}]}</td>
+                          <td>{[{produkt.wartosc}]}</td>
+                        </tr>
+                      </table>
+                      <h4>Produkty do wziecia</h4>
+                      <table class="table">
+                        <tr>
+                          <th>Nazwa</th>
+                          <th>Objetosc</th>
+                          <th>Masa</th>
+                          <th>Wartosc</th>
+                        </tr>
+                        <tr ng-repeat="produkt in produktyDoWziecia">
+                          <td>{[{produkt.nazwa}]}</td>
                           <td>{[{produkt.objetosc}]}</td>
                           <td>{[{produkt.masa}]}</td>
                           <td>{[{produkt.wartosc}]}</td>
