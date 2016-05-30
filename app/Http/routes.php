@@ -18,4 +18,8 @@ Route::get('/', function () {
 Route::get('/getAllProducts', 'ProduktyController@getAllProducts');
 Route::get('/getAllCities', 'MiastaController@getAllCities');
 
+Route::get('/addproduct', 'ProduktyController@addProduct');
+Route::post('/addProductToDatabase', 'ProduktyController@addProductToDatabase');
+
+
 Route::auth();
