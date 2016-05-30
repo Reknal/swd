@@ -16,3 +16,6 @@ Route::get('/', function () {
 });
 
 Route::get('/getAllProducts', 'ProduktyController@getAllProducts');
+Route::get('/getAllCities', 'MiastaController@getAllCities');
+
+Route::auth();

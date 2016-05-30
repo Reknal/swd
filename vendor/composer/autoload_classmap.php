@@ -512,8 +512,10 @@ return array(
     'SebastianBergmann\\RecursionContext\\Exception' => $vendorDir . '/sebastian/recursion-context/src/Exception.php',
     'SebastianBergmann\\RecursionContext\\InvalidArgumentException' => $vendorDir . '/sebastian/recursion-context/src/InvalidArgumentException.php',
     'SebastianBergmann\\Version' => $vendorDir . '/sebastian/version/src/Version.php',
-    'StworzProdukty' => $baseDir . '/database/migrations/2016_05_27_130249_stworz_produkty.php',
+    'StworzMiasta' => $baseDir . '/database/migrations/2016_05_30_174520_stworz_miasta.php',
+    'StworzProdukty' => $baseDir . '/database/migrations/2016_05_30_174534_stworz_produkty.php',
     'TestCase' => $baseDir . '/tests/TestCase.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
+    'stworzMiasta' => $baseDir . '/database/seeds/stworzMiasta.php',
     'stworzProdukty' => $baseDir . '/database/seeds/stworzProdukty.php',
 );
