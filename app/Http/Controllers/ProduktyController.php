@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Produkt;
 use App\Miasto;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 use DB;
 
 
@@ -32,7 +33,7 @@ class ProduktyController extends Controller
 
     	$validator = Validator::make(Input::all(),		    
 		    array(
-		        'nazwa' => 'required|min:4|max:70',
+		        'nazwa' => 'required|min:3|max:70',
 		        'miasto' => 'required',
 		       	'masa' => 'required',
 		       	'objetosc' => 'required',
@@ -42,7 +43,7 @@ class ProduktyController extends Controller
 		);
 
 		if($validator->fails()){
-			return Redirect::back()->withErrors($validator);		
+			return redirect()->back()->withErrors($validator);		
 		}		
 
 
