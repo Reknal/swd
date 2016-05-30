@@ -492,6 +492,12 @@
               height: 34px;
             }
 
+            table, th {
+              text-align: center;
+            }
+
+
+
         </style>
     </head>
     <body ng-app="app">
@@ -518,75 +524,89 @@
             </div>
             <div class="row">
                 <div class="col-xs-12">
-                      <h3>Wybierz produkty</h3> &nbsp;&nbsp; <span class="pointer" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus-circle" aria-hidden="true"></i> dodaj produkt</span>
-                      <table class="table">
-                        <tr>
-                          <th>Akcja</th>
-                          <th>Nazwa</th>
-                          <th>Liczba sztuk</th>
-                          <th>Objetosc</th>
-                          <th>Masa</th>
-                          <th>Wartosc</th>
-                          <th>Miasto</th>
-                        </tr>
-                        <tr ng-repeat="produkt in wszystkieProdukty">
-                          <td><span class="pointer" ng-click="dodajProdukt(produkt)" ng-show="produkt.liczbaProduktow != 0">dodaj</span></td>
-                          <td>{[{produkt.nazwa}]}</td>
-                          <td>{[{produkt.liczbaProduktow}]}</td>
-                          <td>{[{produkt.objetosc}]}</td>
-                          <td>{[{produkt.masa}]}</td>
-                          <td>{[{produkt.wartosc}]}</td>
-                          <td>{[{produkt.miasto}]}</td>
-                        </tr>
-                        <tr>
-                          <td></td>
-                          <td>{[{}]}</td>
-                          <td>{[{dajSume(wszystkieProdukty, 'liczbaProduktow')}]}</td>
-                          <td>{[{dajSume(wszystkieProdukty, 'objetosc')}]}</td>
-                          <td>{[{dajSume(wszystkieProdukty, 'masa')}]}</td>
-                          <td>{[{dajSume(wszystkieProdukty, 'wartosc')}]}</td>
-                          <td>{[{}]}</td>
-                        </tr>
+                      <h3>Wybierz produkty</h3>
+                      <table class="table table-bordered table-hover">
+                        <thead>
+                          <tr>
+                            <th>Akcja</th>
+                            <th>Nazwa</th>
+                            <th>Liczba sztuk</th>
+                            <th>Objetosc</th>
+                            <th>Masa</th>
+                            <th>Wartosc</th>
+                            <th>Miasto</th>
+                          </tr>
+                        </thead>
+                        <tbody>  
+                          <tr ng-repeat="produkt in wszystkieProdukty">
+                            <td><span class="pointer" ng-click="dodajProdukt(produkt)" ng-show="produkt.liczbaProduktow != 0">dodaj</span></td>
+                            <td>{[{produkt.nazwa}]}</td>
+                            <td>{[{produkt.liczbaProduktow}]}</td>
+                            <td>{[{produkt.objetosc}]}</td>
+                            <td>{[{produkt.masa}]}</td>
+                            <td>{[{produkt.wartosc}]}</td>
+                            <td>{[{produkt.miasto}]}</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>{[{}]}</td>
+                            <td>{[{dajSume(wszystkieProdukty, 'liczbaProduktow')}]}</td>
+                            <td>{[{dajSume(wszystkieProdukty, 'objetosc')}]}</td>
+                            <td>{[{dajSume(wszystkieProdukty, 'masa')}]}</td>
+                            <td>{[{dajSume(wszystkieProdukty, 'wartosc')}]}</td>
+                            <td>{[{}]}</td>
+                          </tr>
+                        </tbody>  
                       </table>
                       <h3>Wybrana lista</h3>
-                      <table class="table">
-                        <tr>
-                          <th>Akcja</th>
-                          <th>Nazwa</th>
-                          <th>Liczba sztuk</th>
-                          <th>Objetosc</th>
-                          <th>Masa</th>
-                          <th>Wartosc</th>
-                          <th>Miasto</th>
-                        </tr>
-                        <tr ng-repeat="produkt in wybraneProdukty">
-                          <td><span class="pointer" ng-click="usunProdukt(produkt)">usuń</span></td>
-                          <td>{[{produkt.nazwa}]}</td>
-                          <td>{[{produkt.liczbaProduktow}]}</td>
-                          <td>{[{produkt.objetosc}]}</td>
-                          <td>{[{produkt.masa}]}</td>
-                          <td>{[{produkt.wartosc}]}</td>
-                          <td>{[{produkt.miasto}]}</td>
-                        </tr>
-                        <tr>
-                          <td></td>
-                          <td>{[{}]}</td>
-                          <td>{[{dajSume(wybraneProdukty, 'liczbaProduktow')}]}</td>
-                          <td>{[{dajSume(wybraneProdukty, 'objetosc')}]}</td>
-                          <td>{[{dajSume(wybraneProdukty, 'masa')}]}</td>
-                          <td>{[{dajSume(wybraneProdukty, 'wartosc')}]}</td>
-                          <td>{[{}]}</td>
-                        </tr>
+                      <table class="table table-bordered table-hover">
+                        <thead>
+                          <tr>
+                            <th>Akcja</th>
+                            <th>Nazwa</th>
+                            <th>Liczba sztuk</th>
+                            <th>Objetosc</th>
+                            <th>Masa</th>
+                            <th>Wartosc</th>
+                            <th>Miasto</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr ng-repeat="produkt in wybraneProdukty">
+                            <td><span class="pointer" ng-click="usunProdukt(produkt)">usuń</span></td>
+                            <td>{[{produkt.nazwa}]}</td>
+                            <td>{[{produkt.liczbaProduktow}]}</td>
+                            <td>{[{produkt.objetosc}]}</td>
+                            <td>{[{produkt.masa}]}</td>
+                            <td>{[{produkt.wartosc}]}</td>
+                            <td>{[{produkt.miasto}]}</td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>{[{}]}</td>
+                            <td>{[{dajSume(wybraneProdukty, 'liczbaProduktow')}]}</td>
+                            <td>{[{dajSume(wybraneProdukty, 'objetosc')}]}</td>
+                            <td>{[{dajSume(wybraneProdukty, 'masa')}]}</td>
+                            <td>{[{dajSume(wybraneProdukty, 'wartosc')}]}</td>
+                            <td>{[{}]}</td>
+                          </tr>
+                        </tbody>  
                       </table>
+
+                      <button type="submit" ng-click="sprawdz()" class="btn btn-primary">Sprawdź, które przedmioty należy spakować</button> <br>
+
                       <h3>Produkty do wziecia</h3>
-                      <table class="table">
-                        <tr>
-                          <th>Nazwa</th>
-                          <th>Objetosc</th>
-                          <th>Masa</th>
-                          <th>Wartosc</th>
-                          <th>Miasto</th>
-                        </tr>
+                      <table class="table table-bordered table-hover">
+                        <thead>
+                          <tr>
+                            <th>Nazwa</th>
+                            <th>Objetosc</th>
+                            <th>Masa</th>
+                            <th>Wartosc</th>
+                            <th>Miasto</th>
+                          </tr>
+                        </thead>
+                        <tbody>
                         <tr ng-repeat="produkt in produktyDoWziecia track by $index">
                           <td>{[{produkt.nazwa}]}</td>
                           <td>{[{produkt.objetosc}]}</td>
@@ -601,8 +621,8 @@
                           <td>{[{dajSume(produktyDoWziecia, 'wartosc')}]}</td>
                           <td>{[{}]}</td>
                         </tr>
+                        </tbody>
                       </table>
-                      <button type="submit" ng-click="sprawdz()" class="btn btn-default">Sprawdz</button>
                 </div>
             </div>
 
