@@ -10,7 +10,6 @@ use App\Miasto;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 use DB;
-use Illuminate\Support\Facades\Validator;
 
 
 class ProduktyController extends Controller
