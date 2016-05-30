@@ -40,12 +40,12 @@
 
 
             <div class="row">
-                <div class="col-xs-3">
+                <div class="col-xs-12">
                     {!! Form::open(array('url' => '/addProductToDatabase')) !!}
         
                     <!-- <div class="modal-body"> -->
                     <div class="row message">
-                      <div class="col-xs-12">
+                      <div class="col-xs-6">
                         <div class="form-group">
                             <label for="nazwa">Nazwa</label>
                             <input type="text" class="form-control" name="nazwa" required>
@@ -54,7 +54,7 @@
                         </div>
 
                       </div>
-                      <div class="col-xs-12">
+                      <div class="col-xs-6">
                         <div class="form-group">
                         <label for="miasto">Miasto</label> <br>
                         {!! Form::select('miasto', $miasta, '', ['class'=> 'form-control', 'required']) !!}
@@ -62,7 +62,7 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="col-xs-12">
+                      <div class="col-xs-6">
                             <div class="form-group">
                             <label for="masa">Masa</label>
                             <div class="input-group">
@@ -73,7 +73,7 @@
 
                             </div>
                       </div>
-                      <div class="col-xs-12">
+                      <div class="col-xs-6">
                             <div class="form-group">
                             <label for="objetosc">Objętosć</label>
                             <div class="input-group">
@@ -86,7 +86,7 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="col-xs-12">
+                      <div class="col-xs-6">
                         <div class="form-group">
                         <label for="wartosc">Wartosć</label>
                         <div class="input-group">
@@ -95,7 +95,7 @@
                         </div>
                         </div>
                       </div>
-                      <div class="col-xs-12">
+                      <div class="col-xs-6">
                         <div class="form-group">
                         <label for="lsztuk">Liczba sztuk</label>
                         <div class="input-group">
@@ -108,8 +108,10 @@
                   <!-- </div> -->
                   <!-- <div class="modal-footer"> -->
                     <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Anuluj</button> -->
-                    <!-- <button type="button" class="btn btn-primary" data-dismiss="modal">Dodaj</button> -->
-                    {!! Form::submit('Dodaj produkt', ['class' => 'btn btn-primary']) !!}
+                    <div class="pull-right">
+                        <a href="/"><button type="button" class="btn btn-default">Wróć</button></a>
+                        {!! Form::submit('Dodaj produkt', ['class' => 'btn btn-primary']) !!}
+                    </div>
                 <!-- </div> -->
 
                 {!! Form::close() !!}

@@ -9,6 +9,7 @@ use App\Produkt;
 use App\Miasto;
 use Illuminate\Support\Facades\Input;
 use DB;
+use Illuminate\Support\Facades\Validator;
 
 
 class ProduktyController extends Controller
