@@ -540,7 +540,8 @@
               </div>
             </div>
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-xs-12"> 
+                <a href="/addproduct"> dodaj produkt</a>
                       <h3>Wybierz produkty</h3>
                       <p>
                         Poniżej przedstawione sa wszystkie produkty, które sa akutalnie dostępne w bazie danych. Używajac przycisku <i class ="fa fa-plus-circle" aria-hidden="true"></i> proszę o wybór interesujacych Państwa przedmiotów.
