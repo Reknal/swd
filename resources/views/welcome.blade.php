@@ -80,13 +80,14 @@
 
                 drzewoWezly = stworzWezly($scope.listaWybranych.length);
 
-                // console.log('drzewoWezly', drzewoWezly);
+                var temp1 = deepObjCopy(drzewoWezly); 
+
+                console.log('stan', temp1);
 
                 drzewoKrawdzenie = stworzKrawedzie(drzewoWezly);
 
-                // var temp = deepObjCopy(drzewoKrawdzenie);
-
-                // console.log('krawedzie', temp);
+                var temp2 = deepObjCopy(drzewoKrawdzenie);
+                console.log('krawedzie', temp2);
 
                 dajProdukty(drzewoKrawdzenie);
 
@@ -113,10 +114,6 @@
                   } else {
 
                     // usuwamy krawedzie, ktore nie spelniaja ogarniczen
-                    
-                     // var temp1 = deepObjCopy(u);
-
-                     // console.log('u przed wyrzuceniem', temp1);
 
                     window._.each(u, function(grupa, indeks){
                       u[indeks] = window._.filter(u[indeks], function(krawedz){
@@ -125,9 +122,6 @@
                       });
                     });
 
-                    // var temp2 = deepObjCopy(u);
-
-                    //  console.log('u po wyrzuceniu', temp2);
 
                     // dodawanie wartosci z poprzednich iteracji 
 
@@ -160,9 +154,8 @@
 
                   zapamietaneWartosci.push(vx);
 
-                  var temp = deepObjCopy(zapamietaneWartosci);
-
-                  console.log('zapamietaneWartosci', temp);
+                  var temp3 = deepObjCopy(zapamietaneWartosci);
+                  console.log('vx', temp3);
 
                 }
 
@@ -470,21 +463,33 @@
               cursor: pointer;
             }
 
+            .container {
+              margin-top: 30px;
+              margin-bottom: 30px;
+            }
+
         </style>
     </head>
     <body ng-app="app">
         <div class="container" ng-controller="MainController" ng-init="init()">
             <div class="row">
+              <div class="form-group col-xs-6">
+                    <label for="maskMasa">Maksymalna masa pojazdu</label>
+                    <input type="number" class="form-control" id="maskMasa" placeholder="30" ng-model="maksMasa">
+              </div>
+              <div class="form-group col-xs-6">
+                    <label for="maksObjetosc">Maksymalna objetosć pojazdu</label>
+                    <input type="number" class="form-control" id="maksObjetosc" placeholder="30" ng-model="maksObjetosc">
+              </div>
+            </div>
+            <!-- <div class="row">
+                <div class="form-group col-xs-6">
+                  <label for="maskMasa">Nazwa produktu</label>
+                  <input type="text" class="form-control" id="maskMasa" placeholder="30" ng-model="maksMasa">
+                </div>
+            </div> -->
+            <div class="row">
                 <div class="col-xs-12">
-                    <form>
-                      <div class="form-group">
-                        <label for="maskMasa">Maksymalna masa pojazdu</label>
-                        <input type="number" class="form-control" id="maskMasa" placeholder="30" ng-model="maksMasa">
-                      </div>
-                      <div class="form-group">
-                        <label for="maksObjetosc">Maksymalna objetosć pojazdu</label>
-                        <input type="number" class="form-control" id="maksObjetosc" placeholder="30" ng-model="maksObjetosc">
-                      </div>
                       <h4>Wybierz produkty</h4>
                       <table class="table">
                         <tr>
@@ -561,7 +566,6 @@
                         </tr>
                       </table>
                       <button type="submit" ng-click="sprawdz()" class="btn btn-default">Sprawdz</button>
-                    </form>
                 </div>
             </div>
         </div>
