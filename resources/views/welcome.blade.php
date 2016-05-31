@@ -540,8 +540,8 @@
               </div>
             </div>
             <div class="row">
-                <div class="col-xs-12"> 
-                
+                <div class="col-xs-12">
+
                       <h3>Wybierz produkty</h3> <a href="/addproduct"> <i class ="fa fa-plus-circle" aria-hidden="true"></i> dodaj produkt</a>
                       <p>
                         Poniżej przedstawione sa wszystkie produkty, które sa akutalnie dostępne w bazie danych. Używajac przycisku <i class ="fa fa-plus-circle" aria-hidden="true"></i> proszę o wybór interesujacych Państwa przedmiotów.
@@ -552,15 +552,15 @@
                             <th>Akcja</th>
                             <th>Nazwa</th>
                             <th>Liczba sztuk</th>
-                            <th>Objetosc [zł]</th>
+                            <th>Objetość [zł]</th>
                             <th>Masa [kg]</th>
-                            <th>Wartosc [zł]</th>
+                            <th>Wartość [zł]</th>
                             <th>Miasto</th>
                           </tr>
                         </thead>
                         <tbody>
                           <tr ng-repeat="produkt in wszystkieProdukty">
-                            <td class="dodaj"><span class="pointer" ng-click="dodajProdukt(produkt)" ng-show="produkt.liczbaProduktow != 0"><i class="fa fa-plus-circle" aria-hidden="true"></i></span></td>
+                            <td class="dodaj pointer" ng-click="dodajProdukt(produkt)"> <span ng-show="produkt.liczbaProduktow != 0"><i class="fa fa-plus-circle" aria-hidden="true"></i></span></td>
                             <td>{[{produkt.nazwa}]}</td>
                             <td>{[{produkt.liczbaProduktow}]}</td>
                             <td>{[{produkt.objetosc}]}</td>
@@ -591,15 +591,15 @@
                             <th>Akcja</th>
                             <th>Nazwa</th>
                             <th>Liczba sztuk</th>
-                            <th>Objetosc [zł]</th>
+                            <th>Objetość [zł]</th>
                             <th>Masa [kg]</th>
-                            <th>Wartosc [zł]</th>
+                            <th>Wartość [zł]</th>
                             <th>Miasto</th>
                           </tr>
                         </thead>
                         <tbody>
                           <tr ng-repeat="produkt in wybraneProdukty">
-                            <td class="usun"><span class="pointer" ng-click="usunProdukt(produkt)"><i class="fa fa-minus-circle" aria-hidden="true"></i></span></td>
+                            <td class="usun pointer" ng-click="usunProdukt(produkt)"><span  ><i class="fa fa-minus-circle" aria-hidden="true"></i></span></td>
                             <td>{[{produkt.nazwa}]}</td>
                             <td>{[{produkt.liczbaProduktow}]}</td>
                             <td>{[{produkt.objetosc}]}</td>
@@ -622,7 +622,7 @@
                       </table>
 
                       <button type="submit" ng-click="sprawdz()" class="btn btn-primary">Sprawdź, które przedmioty należy spakować</button> <br>
-                      
+
                       <div ng-show="pierwszeSprawdzenie">
 
                       <br>
@@ -635,9 +635,9 @@
                         <thead>
                           <tr>
                             <th>Nazwa</th>
-                            <th>Objetosc [zł]</th>
+                            <th>Objetość [zł]</th>
                             <th>Masa [kg]</th>
-                            <th>Wartosc [zł]</th>
+                            <th>Wartość [zł]</th>
                             <th>Miasto</th>
                           </tr>
                         </thead>
@@ -660,10 +660,6 @@
                         </tr>
                         </tfoot>
                       </table>
-            
-                      <h3>Alternatywne propozycje</h3>
-
-                      
 
                       </div>
                 </div>
